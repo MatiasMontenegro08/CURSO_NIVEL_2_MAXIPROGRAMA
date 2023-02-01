@@ -65,31 +65,28 @@ namespace Presentacion
                     producto = new Producto();
                 }
 
-                    producto.Codigo = txtCod.Text;
-                    producto.Nombre = txtNombre.Text;
-                    producto.Detalle = txtDesc.Text;
-                    producto.Imagen = txtImg.Text;
-                    producto.Precio = Convert.ToDouble(txtPrecio.Text);
-                    producto.Categoria = (Categoria)cboCategoria.SelectedItem;
-                    producto.Marca = (Marca)cboMarca.SelectedItem;
+                producto.Codigo = txtCod.Text;
+                producto.Nombre = txtNombre.Text;
+                producto.Detalle = txtDesc.Text;
+                producto.Imagen = txtImg.Text;
+                producto.Precio = Convert.ToDouble(txtPrecio.Text);
+                producto.Categoria = (Categoria)cboCategoria.SelectedItem;
+                producto.Marca = (Marca)cboMarca.SelectedItem;
 
-                    if (producto.Id != 0)
-                    {
-                        negocio.modificar(producto);
-                        MessageBox.Show("Producto Modificado!");
-                    }
-                    else
-                    {
-                        negocio.agregar(producto);
-                        MessageBox.Show("Producto agregado!");
-                    }
-
-                if (archivo != null && !(txtImg.Text.ToUpper().Contains("HTTP")))
+                if (producto.Id != 0)
                 {
-                    File.Copy(archivo.FileName, ConfigurationManager.AppSettings["Imagenes"] + archivo.SafeFileName);
+                    negocio.modificar(producto);
+                    MessageBox.Show("Producto Modificado!");
                 }
-                    Close();
-                
+                else
+                {
+                    negocio.agregar(producto);
+                    MessageBox.Show("Producto agregado!");
+                }
+
+                guardarImagen(archivo);
+                Close();
+
             }
             catch (Exception ex)
             {
@@ -119,7 +116,7 @@ namespace Presentacion
                     cargarImagen(producto.Imagen);
                     cboCategoria.SelectedValue = producto.Categoria.Id;
                     cboMarca.SelectedValue = producto.Marca.Id;
-                    
+
                 }
             }
             catch (Exception ex)
@@ -139,8 +136,6 @@ namespace Presentacion
             {
                 txtImg.Text = archivo.FileName;
                 cargarImagen(archivo.FileName);
-
-                //File.Copy(archivo.FileName, ConfigurationManager.AppSettings["Imagenes"] + archivo.SafeFileName);
             }
         }
 
@@ -205,6 +200,13 @@ namespace Presentacion
             catch (Exception)
             {
                 pbImagen.Load("https://bicentenario.gob.pe/biblioteca/themes/biblioteca/assets/images/not-available-es.png");
+            }
+        }
+        private void guardarImagen(OpenFileDialog archivo)
+        {
+            if (archivo != null && !(txtImg.Text.ToUpper().Contains("HTTP")))
+            {
+                File.Copy(archivo.FileName, ConfigurationManager.AppSettings["Imagenes"] + archivo.SafeFileName);
             }
         }
 
